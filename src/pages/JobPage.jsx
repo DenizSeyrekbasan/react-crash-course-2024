@@ -1,13 +1,15 @@
 // import React, { useEffect, useState } from "react";
-import { useParams, useLoaderData, Link } from "react-router-dom";
+import { useParams, useLoaderData, Link, useNavigate } from "react-router-dom";
 import { FaArrowLeft, FaMapMarked } from "react-icons/fa";
 // import Spinner from "../components/Spinner";
 
-const JobPage = () => {
+const JobPage = ({ deleteJob }) => {
   const { id } = useParams();
   // const [job, setJob] = useState(null);
   // const [logging, setLogging] = useState(true);
   const job = useLoaderData();
+  const navigate = useNavigate();
+
 
   // useEffect(() => {
   //   const fetchJob = async () => {
@@ -23,6 +25,15 @@ const JobPage = () => {
   //   };
   //   fetchJob();
   // }, []);
+
+  const onDeleteClick = (jobId) => {
+    const confirm = window.confirm("are you sure ?");
+
+    if (!confirm) return;
+
+    deleteJob(jobId);
+    navigate('/jobs')
+  };
 
   return (
     <>
@@ -71,21 +82,21 @@ const JobPage = () => {
 
                 <h2 className="text-2xl">{job.company.name}</h2>
 
-                <p className="my-2">
-                {job.company.description}
-                </p>
+                <p className="my-2">{job.company.description}</p>
 
                 <hr className="my-4" />
 
                 <h3 className="text-xl">Contact Email:</h3>
 
                 <p className="my-2 bg-indigo-100 p-2 font-bold">
-                {job.company.contactEmail}
+                  {job.company.contactEmail}
                 </p>
 
                 <h3 className="text-xl">Contact Phone:</h3>
 
-                <p className="my-2 bg-indigo-100 p-2 font-bold">{job.company.contactPhone}</p>
+                <p className="my-2 bg-indigo-100 p-2 font-bold">
+                  {job.company.contactPhone}
+                </p>
               </div>
 
               <div className="bg-white p-6 rounded-lg shadow-md mt-6">
@@ -96,7 +107,10 @@ const JobPage = () => {
                 >
                   Edit Job
                 </Link>
-                <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block">
+                <button
+                  onClick={() => onDeleteClick(job.id)}
+                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+                >
                   Delete Job
                 </button>
               </div>
